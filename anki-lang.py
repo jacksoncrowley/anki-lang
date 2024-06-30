@@ -35,7 +35,7 @@ def text_to_speech(word, language='hu'):
     :param output_file: The name of the output MP3 file
     """
     tts = gTTS(text=word, lang=language, slow=False)
-    output_file = f"temp/{word}.mp3"
+    output_file = f"audio/{word}.mp3"
     tts.save(output_file)
     print(f"Audio saved as {output_file}")
 
@@ -61,15 +61,12 @@ def new_card(word, ipa, image, audio):
 
 ###
 word=input("Enter word: ")
-
 text_to_speech(word)
 ipa=word_to_ipa(word)
 
-# image=input("Enter link to image: ")
-image="https://kvantumnaturkozmetikum.hu/wp-content/uploads/2018/11/alma-gyumolcs.jpg"
-download_image(image, f"temp/{word}.jpg")
+image=input("Enter link to image: ")
+download_image(image, f"images/{word}.jpg")
 
-# new_card(word, ipa)
 new_card(word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
-my_package.media_files = [f"temp/{word}.jpg",f"temp/{word}.mp3"]
+my_package.media_files = [f"images/{word}.jpg",f"audio/{word}.mp3"]
 my_package.write_to_file('output.apkg')
