@@ -65,7 +65,7 @@ my_model = genanki.Model(
                         margin: 20px 0;
                     }
                     .image img {
-                        max-width: 80%;
+                        max-width: 60%;
                         height: auto;
                         margin: 20px 0;
                     }
@@ -76,7 +76,6 @@ my_model = genanki.Model(
             ''',
         },
     ])
-
 
 my_deck = genanki.Deck(
   2059400110,
@@ -119,16 +118,52 @@ def new_card(word, ipa, image, audio):
     fields=[word, ipa, image, audio])
     my_deck.add_note(my_note)
 
+def input_loop():
+    word_image_pairs = []
+    while True:
+        word = input("Enter word (or 'quit' to finish): ").strip().lower()
+        if word in ['quit', 'exit', 'q']:
+            break
+
+        image = input("Enter link to image: ").strip()
+        if image in ['quit', 'exit', 'q']:
+            break
+
+        word_image_pairs.append((word, image))
+        print("\n--- Next Word ---\n")
+    return word_image_pairs
+
+def process_inputs(word_image_pairs):
+    for word, image in word_image_pairs:
+        text_to_speech(word)
+        ipa = word_to_ipa(word)
+        download_image(image, f"images/{word}.jpg")
+        new_card(word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
+        my_package.media_files.append(f"images/{word}.jpg")
+        my_package.media_files.append(f"audio/{word}.mp3")
+
 ###
 
-word=input("Enter word: ")
-text_to_speech(word)
-ipa=word_to_ipa(word)
+def main():
+    print("Anki semi-automated flash card generator.")
+    
+    # Get input from user
+    word_image_pairs = input_loop()
+    
+    # Process all the inputs
+    print("\nProcessing all inputs:")
+    process_inputs(word_image_pairs)
+    
+    # Continue with additional operations
+    print("\nFinished processing all inputs.")
+    print("Writing out deck to output.apkg...")
+    
+    # Write to file
+    my_package.write_to_file('output.apkg')
+    
+    print("\nNew cards created added to output.apkg.")
+    print("Before importing into Anki, remember to export your old deck. Just in case!")
 
-image=input("Enter link to image: ")
-download_image(image, f"images/{word}.jpg")
-
-new_card(word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
-
-my_package.media_files = [f"images/{word}.jpg",f"audio/{word}.mp3"]
-my_package.write_to_file('output.apkg')
+if __name__ == "__main__":
+    my_package.media_files = []  # Initialize the media_files list
+    main()
