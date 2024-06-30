@@ -1,7 +1,31 @@
 import os
+import genanki
 from gtts import gTTS
 import epitran
 import urllib.request
+
+my_model = genanki.Model(
+  1607392319,
+  'Simple Model',
+  fields=[
+    {'name': 'Word'},
+    {'name': 'IPA'},
+    {'name': 'Image'},
+    {'name': 'Audio'}
+  ],
+  templates=[
+    {
+      'name': 'Card 1',
+      'qfmt': '{{Word}}',
+      'afmt': '{{FrontSide}}<hr id="answer">IPA: {{IPA}}<br>{{Image}}<br>{{Audio}}',
+    },
+  ])
+
+my_deck = genanki.Deck(
+  2059400110,
+  'Hungarian Words')
+
+my_package = genanki.Package(my_deck)
 
 def text_to_speech(word, language='hu'):
     """
@@ -29,11 +53,23 @@ def download_image(url, file_path):
         print(f"Error downloading image: {e}")
         return False
 
+def new_card(word, ipa, image, audio):
+    my_note = genanki.Note(
+    model=my_model,
+    fields=[word, ipa, image, audio])
+    my_deck.add_note(my_note)
+
 ###
 word=input("Enter word: ")
 
 text_to_speech(word)
-word_to_ipa(word)
+ipa=word_to_ipa(word)
 
-image=input("Enter link to image: ")
+# image=input("Enter link to image: ")
+image="https://kvantumnaturkozmetikum.hu/wp-content/uploads/2018/11/alma-gyumolcs.jpg"
 download_image(image, f"temp/{word}.jpg")
+
+# new_card(word, ipa)
+new_card(word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
+my_package.media_files = [f"temp/{word}.jpg",f"temp/{word}.mp3"]
+my_package.write_to_file('output.apkg')
