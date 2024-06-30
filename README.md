@@ -1,0 +1,1 @@
+# ANKI-LANG for assisted flash card generation for language learning
