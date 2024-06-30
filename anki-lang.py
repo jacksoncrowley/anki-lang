@@ -1,4 +1,5 @@
 import os
+import sys
 import genanki
 from gtts import gTTS
 import epitran
@@ -14,18 +15,77 @@ my_model = genanki.Model(
     {'name': 'Audio'}
   ],
   templates=[
-    {
-      'name': 'Card 1',
-      'qfmt': '{{Word}}',
-      'afmt': '{{FrontSide}}<hr id="answer">IPA: {{IPA}}<br>{{Image}}<br>{{Audio}}',
-    },
-  ])
+        {
+            'name': 'Card 1',
+            'qfmt': '''
+                <div class="card">
+                    <div class="word">{{Word}}</div>
+                </div>
+                
+                <style>
+                    .card {
+                        font-family: Arial, sans-serif;
+                        font-size: 40px;
+                        text-align: center;
+                        color: black;
+                        background-color: white;
+                    }
+                    .word {
+                        font-size: 60px;
+                        color: #333;
+                        margin-top: 50px;
+                    }
+                </style>
+            ''',
+            'afmt': '''
+                <div class="card">
+                    <div class="word">{{Word}}</div>
+                    <hr id="answer">
+                    <div class="ipa">IPA: {{IPA}}</div>
+                    <div class="image">{{Image}}</div>
+                    <div class="audio">{{Audio}}</div>
+                </div>
+                
+                <style>
+                    .card {
+                        font-family: Arial, sans-serif;
+                        font-size: 30px;
+                        text-align: center;
+                        color: black;
+                        background-color: white;
+                    }
+                    .word {
+                        font-size: 50px;
+                        color: #333;
+                        margin-top: 20px;
+                    }
+                    .ipa {
+                        font-size: 35px;
+                        color: #666;
+                        margin: 20px 0;
+                    }
+                    .image img {
+                        max-width: 80%;
+                        height: auto;
+                        margin: 20px 0;
+                    }
+                    .audio {
+                        margin: 20px 0;
+                    }
+                </style>
+            ''',
+        },
+    ])
+
 
 my_deck = genanki.Deck(
   2059400110,
   'Hungarian Words')
 
 my_package = genanki.Package(my_deck)
+
+os.makedirs("audio", exist_ok=True)
+os.makedirs("images", exist_ok=True)
 
 def text_to_speech(word, language='hu'):
     """
@@ -60,6 +120,7 @@ def new_card(word, ipa, image, audio):
     my_deck.add_note(my_note)
 
 ###
+
 word=input("Enter word: ")
 text_to_speech(word)
 ipa=word_to_ipa(word)
@@ -68,5 +129,6 @@ image=input("Enter link to image: ")
 download_image(image, f"images/{word}.jpg")
 
 new_card(word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
+
 my_package.media_files = [f"images/{word}.jpg",f"audio/{word}.mp3"]
 my_package.write_to_file('output.apkg')
