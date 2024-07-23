@@ -1,4 +1,3 @@
-import csv
 import yaml
 import epitran
 import genanki
@@ -57,7 +56,14 @@ def interactive_loop():
         print("\n--- Next Word ---\n")
     return word_image_pairs
 
-# def parse_word_image_csv(csv):
+def parse_word_image_csv(csv):
+    word_image_pairs = []
+    with open(csv, 'r', newline='') as csvfile:
+        reader = csvfile.readlines()
+        for row in reader:
+            word_image_pairs.append(row.split(", "))
+
+    return word_image_pairs
 
 
 def process_inputs(deck, model,package, word_image_pairs):

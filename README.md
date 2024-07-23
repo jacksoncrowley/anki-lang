@@ -19,7 +19,7 @@ Architecture:
 
 - verify word/phrase is valid [ ]
 - check for pre-existing deck templates [ ]
-- put all functions in a module file [ ]
+- put all functions in a module file [x]
 - config file for:
     - anki presets [ ]
     - language [ ]

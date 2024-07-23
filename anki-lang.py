@@ -98,6 +98,8 @@ def main():
         word_image_pairs = modules.interactive_loop()
 
     # else read from file
+    if args.bulk:
+        word_image_pairs = modules.parse_word_image_csv(args.bulk)
     
     # Process all the inputs
     print("\nProcessing all inputs:")
