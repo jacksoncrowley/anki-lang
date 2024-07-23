@@ -16,7 +16,7 @@ create new anki card with word on the front and the image, tts, and ipa on the b
 add multiple cards in one session [x]
 
 Architecture:
-- add from saved list []
+
 - verify word/phrase is valid [ ]
 - check for pre-existing deck templates [ ]
 - put all functions in a module file [ ]
@@ -25,4 +25,5 @@ Architecture:
     - language [ ]
     - paths [ ]
 - pip installable [ ]
-- nice CLI interface [ ]
+- interactive mode [x]
+- add from saved list [ ]

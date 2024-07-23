@@ -1,11 +1,7 @@
 import os
-import sys
-import yaml
-import epitran
 import genanki
+import argparse
 from src import modules
-from gtts import gTTS
-import urllib.request
 
 ## load config file
 config = modules.load_config("config.yaml")
@@ -87,74 +83,25 @@ my_package = genanki.Package(my_deck)
 
 os.makedirs("audio", exist_ok=True)
 os.makedirs("images", exist_ok=True)
-
-def text_to_speech(word, language='hu'):
-    """
-    Convert text to speech     
-    :param word: The word to convert to speech
-    :param language: The language code (default is 'hu' for Hungarian)
-    :param output_file: The name of the output MP3 file
-    """
-    tts = gTTS(text=word, lang=language, slow=False)
-    output_file = f"audio/{word}.mp3"
-    tts.save(output_file)
-    print(f"Audio saved as {output_file}")
-
-def word_to_ipa(word, language_code="hun-Latn"):
-    epi = epitran.Epitran(language_code)
-    ipa = epi.transliterate(word)
-    return ipa
-
-def download_image(url, file_path):
-    try:
-        urllib.request.urlretrieve(url, file_path)
-        print(f"Image downloaded successfully to {file_path}")
-        return True
-    except Exception as e:
-        print(f"Error downloading image: {e}")
-        return False
-
-def new_card(word, ipa, image, audio):
-    my_note = genanki.Note(
-    model=my_model,
-    fields=[word, ipa, image, audio])
-    my_deck.add_note(my_note)
-
-def input_loop():
-    word_image_pairs = []
-    while True:
-        word = input("Enter word (or 'quit' to finish): ").strip().lower()
-        if word in ['quit', 'exit', 'q']:
-            break
-
-        image = input("Enter link to image: ").strip()
-        if image in ['quit', 'exit', 'q']:
-            break
-
-        word_image_pairs.append((word, image))
-        print("\n--- Next Word ---\n")
-    return word_image_pairs
-
-def process_inputs(word_image_pairs):
-    for word, image in word_image_pairs:
-        text_to_speech(word)
-        ipa = word_to_ipa(word)
-        download_image(image, f"images/{word}.jpg")
-        new_card(word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
-        my_package.media_files.append(f"images/{word}.jpg")
-        my_package.media_files.append(f"audio/{word}.mp3")
-
 ###
 
 def main():
-    print("Anki semi-automated flash card generator.")
+    parser = argparse.ArgumentParser(description="Word/Image Pair Learning Tool")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-b", "--bulk", type=str, help="Run in bulk import mode")
+    group.add_argument("-i", "--interactive", action="store_true", help="Run in interactive mode")
+    args = parser.parse_args()
     
     # Get input from user
-    word_image_pairs = input_loop()
+    if args.interactive:
+        print("Anki-Lang Semi-automated flash card generator!")
+        word_image_pairs = modules.interactive_loop()
+
+    # else read from file
     
     # Process all the inputs
     print("\nProcessing all inputs:")
-    process_inputs(word_image_pairs)
+    modules.process_inputs(my_deck, my_model, my_package, word_image_pairs)
     
     # Continue with additional operations
     print("\nFinished processing all inputs.")
