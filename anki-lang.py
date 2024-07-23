@@ -1,9 +1,14 @@
 import os
 import sys
-import genanki
-from gtts import gTTS
+import yaml
 import epitran
+import genanki
+from src import modules
+from gtts import gTTS
 import urllib.request
+
+## load config file
+config = modules.load_config("config.yaml")
 
 my_model = genanki.Model(
   1607392319,
@@ -77,10 +82,7 @@ my_model = genanki.Model(
         },
     ])
 
-my_deck = genanki.Deck(
-  2059400110,
-  'Hungarian Words')
-
+my_deck = genanki.Deck(config["Deck"]["seed"], config["Deck"]["name"])
 my_package = genanki.Package(my_deck)
 
 os.makedirs("audio", exist_ok=True)
