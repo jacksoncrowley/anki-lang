@@ -11,10 +11,7 @@ def load_config(config_file):
 
 def text_to_speech(word, language='hu'):
     """
-    Convert text to speech     
-    :param word: The word to convert to speech
-    :param language: The language code (default is 'hu' for Hungarian)
-    :param output_file: The name of the output MP3 file
+    Convert a string to a text-to-speech audio file using gTTS
     """
     tts = gTTS(text=word, lang=language, slow=False)
     output_file = f"audio/{word}.mp3"
@@ -22,11 +19,17 @@ def text_to_speech(word, language='hu'):
     print(f"Audio saved as {output_file}")
 
 def word_to_ipa(word, language_code="hun-Latn"):
+    """
+    Convert a string to an international phonetic alphabet (IPA) string using epitran
+    """
     epi = epitran.Epitran(language_code)
     ipa = epi.transliterate(word)
     return ipa
 
 def download_image(url, file_path):
+    """
+    Download a corresponding image from a url and save it as {file_path} (typically the word)
+    """
     try:
         urllib.request.urlretrieve(url, file_path)
         print(f"Image downloaded successfully to {file_path}")
@@ -36,12 +39,20 @@ def download_image(url, file_path):
         return False
 
 def new_card(deck, model, word, ipa, image, audio):
+    """
+    Create a new flash card in a given {deck} using a given {model}.
+    Takes four inputs: the word, the image file, the ipa string, and the tts file
+    """
     my_note = genanki.Note(
     model=model,
     fields=[word, ipa, image, audio])
     deck.add_note(my_note)
 
 def interactive_loop():
+    """
+    Interactive CLI session, continually asking for word, then url, then repeat
+    Returns a list of [word, image] pairs
+    """
     word_image_pairs = []
     while True:
         word = input("Enter word (or 'quit' to finish): ").strip().lower()
@@ -57,6 +68,10 @@ def interactive_loop():
     return word_image_pairs
 
 def parse_word_image_csv(csv):
+    """
+    Bulk import word/image pairs from a csv, seperated by ", " and newlines
+    Returns a list of [word, image] pairs
+    """
     word_image_pairs = []
     with open(csv, 'r', newline='') as csvfile:
         reader = csvfile.readlines()
@@ -66,6 +81,9 @@ def parse_word_image_csv(csv):
 
 
 def process_inputs(deck, model,package, word_image_pairs):
+    """
+    From a given set of word/image pairs, create a card for each entry
+    """
     for word, image in word_image_pairs:
         text_to_speech(word)
         ipa = word_to_ipa(word)
