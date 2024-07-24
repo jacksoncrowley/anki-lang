@@ -62,7 +62,6 @@ def parse_word_image_csv(csv):
         reader = csvfile.readlines()
         for row in reader:
             word_image_pairs.append(row.split(", "))
-
     return word_image_pairs
 
 
