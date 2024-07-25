@@ -6,11 +6,11 @@
 This project is heavily inspired by the book *Fluent Forever* by Gabriel Wyner. The principle is simple: a barrier to language learning is the automatic translating into our native language. We can work our way around this by finding a word or phrase, and associating with it the sound, the phonetic pronounciation (international phonetic alphabet), and an image. 
 
 # Features
-input word as string [ ]:
+input word as string [x]:
 - generate text-to-speech (tts) audio clip [x]
 - generate international phonetic alphabet (ipa) string [x]
 
-input image url [ ]:
+input image url [x]:
 - download image from url [x]
 - distinguish between internal links/pre-downloaded files and urls? [ ]
 
@@ -27,6 +27,8 @@ config file [ ]
     - generate anki deck presets if doesn't exist [ ]
 - find smart way to store the anki model info [ ]
 - language settings [ ]
+    - gTTS language codes found [here](https://gtts.readthedocs.io/en/latest/module.html#languages-gtts-lang)
+    - epitran codes found [here](https://pypi.org/project/epitran/)
 - file paths [ ]
 
 # Usage notes

@@ -2,4 +2,6 @@ Deck:
   seed: 2059400110
   name: Hungarian Words
 
-Language: Hungarian
+Language:
+  epitran: "hun-Latn"
+  gtts: "hu"

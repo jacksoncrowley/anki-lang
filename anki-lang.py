@@ -103,7 +103,7 @@ def main():
     
     # Process all the inputs
     print("\nProcessing all inputs:")
-    modules.process_inputs(my_deck, my_model, my_package, word_image_pairs)
+    modules.process_inputs(my_deck, my_model, my_package, word_image_pairs, config["Language"]["gtts"], config["Language"]["epitran"])
     
     # Continue with additional operations
     print("\nFinished processing all inputs.")

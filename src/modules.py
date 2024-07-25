@@ -9,16 +9,16 @@ def load_config(config_file):
         return yaml.load(yamlfile, Loader=yaml.FullLoader)
     
 
-def text_to_speech(word, language='hu'):
+def text_to_speech(word, language_code):
     """
     Convert a string to a text-to-speech audio file using gTTS
     """
-    tts = gTTS(text=word, lang=language, slow=False)
+    tts = gTTS(text=word, lang=language_code, slow=False)
     output_file = f"audio/{word}.mp3"
     tts.save(output_file)
     print(f"Audio saved as {output_file}")
 
-def word_to_ipa(word, language_code="hun-Latn"):
+def word_to_ipa(word, language_code):
     """
     Convert a string to an international phonetic alphabet (IPA) string using epitran
     """
@@ -80,13 +80,13 @@ def parse_word_image_csv(csv):
     return word_image_pairs
 
 
-def process_inputs(deck, model,package, word_image_pairs):
+def process_inputs(deck, model,package, word_image_pairs, gtts, epitran):
     """
     From a given set of word/image pairs, create a card for each entry
     """
     for word, image in word_image_pairs:
-        text_to_speech(word)
-        ipa = word_to_ipa(word)
+        text_to_speech(word, gtts)
+        ipa = word_to_ipa(word, epitran)
         download_image(image, f"images/{word}.jpg")
         new_card(deck, model, word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
         package.media_files.append(f"images/{word}.jpg")
