@@ -91,6 +91,9 @@ def main():
     group.add_argument("-b", "--bulk", type=str, help="Run in bulk import mode")
     group.add_argument("-i", "--interactive", action="store_true", help="Run in interactive mode")
     args = parser.parse_args()
+
+    if not args.bulk and not args.interactive:
+        args.interactive = True
     
     # Get input from user
     if args.interactive:
