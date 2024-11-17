@@ -1,3 +1,4 @@
+import re
 import yaml
 import epitran
 import genanki
@@ -25,6 +26,15 @@ def word_to_ipa(word, language_code):
     epi = epitran.Epitran(language_code)
     ipa = epi.transliterate(word)
     return ipa
+
+def sanitize_filename(file_path):
+    """
+    replace spaces with underscores and remove invalid characters from filenames
+    """
+    sanitized_path = file_path.replace(" ", "_")
+    sanitized_path = re.sub(r'[<>:"/\\|?*]', '', sanitized_path)
+    return sanitized_path
+
 
 def download_image(url, file_path):
     """
@@ -87,8 +97,8 @@ def process_inputs(deck, model,package, word_image_pairs, gtts, epitran):
     for word, image in word_image_pairs:
         text_to_speech(word, gtts)
         ipa = word_to_ipa(word, epitran)
-        download_image(image, f"images/{word}.jpg")
-        new_card(deck, model, word, ipa, f"<img src={word}.jpg>", f"[sound:{word}.mp3]")
-        package.media_files.append(f"images/{word}.jpg")
+        download_image(image, f"images/{sanitize_filename(word)}.jpg")
+        new_card(deck, model, word, ipa, f"<img src={sanitize_filename(word)}.jpg>", f"[sound:{word}.mp3]")
+        package.media_files.append(f"images/{sanitize_filename(word)}.jpg")
         package.media_files.append(f"audio/{word}.mp3")
 
