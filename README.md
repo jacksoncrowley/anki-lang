@@ -49,3 +49,6 @@ int(random.random()*1e10)
 - [ ] More user control over output folders and files
 - [ ] Export files into a folder of sessions so that all are saved
 - [ ] uv install guide
+
+## bugs
+- [ ] figures with filenames as spaces dont save...
