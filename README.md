@@ -6,11 +6,13 @@
 This project is heavily inspired by the book *Fluent Forever* by Gabriel Wyner. The principle is simple: a barrier to language learning is the automatic translating into our native language. We can work our way around this by finding a word or phrase, and associating with it the sound, the phonetic pronounciation (international phonetic alphabet), and an image. 
 
 ## Usage
-- Clone the repository
-- Create the conda environment from the `environment.yaml` with:
+!! NOTE: SWITCHED TO UV FOR PACKAGE MANAGEMENT !!
+
+Activate the environment with:
 ```
-conda env create --name anki-lang --file environment.yml
+source .venv/bin/activate
 ```
+
 - Create a `config.yaml` file of your own:
 ```
 Deck:
@@ -45,3 +47,5 @@ int(random.random()*1e10)
 ## (eventual) to-do
 - [ ] Generate config file somehow
 - [ ] More user control over output folders and files
+- [ ] Export files into a folder of sessions so that all are saved
+- [ ] uv install guide
